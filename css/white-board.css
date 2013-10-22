@@ -1,0 +1,39 @@
+body {
+  width: 980px; 
+  min-height: 450px;
+  margin: 0 auto;
+}
+
+.white-board textarea {
+  min-width:380px;
+  min-height: 200px;
+  width: 800px;
+}
+
+.title h1 {
+  float: left;
+}
+
+#get{
+  float: left;
+  margin: 16px 30px;
+}
+
+#update{
+  float: left;
+  margin: 16px 10px;
+}
+
+#board-content {
+  display: block;
+  clear: both;
+}
+
+.guide article {
+  clear: both;
+}
+
+.guide poem {
+  font-size: 1.5em;
+  font-style: italic;
+}

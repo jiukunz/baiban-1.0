@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Parse JavaScript Todo App</title>
+  <link href="css/bootstrap.min.css" media="all" rel="stylesheet" type="text/css"/>
+  <link href="css/white-board.css" media="all" rel="stylesheet" type="text/css"/>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="js/underscore-1.1.6.js"></script>
+  <script src="//www.parsecdn.com/js/parse-1.1.15.min.js"></script>
+  <script src="js/wb.js"></script>
+</head>
+
+<body>
+
+<div id="white-board">
+  <div class="title">
+    <h1>White-Board</h1>
+  </div>
+
+  <div class="guide">
+  </div>
+
+  <div class="white-board">
+  </div>
+</div>
+
+<script type="text/template" id="white-board-template">
+  <button id="get" class="btn btn-primary">Get</button>
+  <button id="update" class="btn btn-primary">Update</button>
+  <textarea rows="25" cols="100" id="board-content"/>
+</script>
+
+<script type="text/template" id="guide-template">
+  <article>
+    <poem>
+    横看成岭侧成峰,<br>
+    远近高低各不同.<br>
+    不识卢山真面目,<br>
+    只缘身在此山中.<br>
+    </poem>
+  </article>
+</script>
+
+</body>
+
+</html>
