@@ -60,8 +60,6 @@ $(function() {
             var wb = results[0];
             self.$("article").html(wb.get("content"));
           }
-        },
-        error: function(object, error) {
         }
       });
     },
@@ -74,12 +72,10 @@ $(function() {
           if(results.length === 0){
             var wb = new Wb();
             wb.save({"boardId":self.boardId, "content": self.$("article").html()},{
-              success: function(wb) {
+              success: function() {
                   $(".alert-success").show();
                   setTimeout(function() { $(".alert-success").hide(); }, 2000);
-                 },
-              error: function(wb, error) {
-              }
+                }
             });
           } else {
             results[0].save(null, {
@@ -87,16 +83,14 @@ $(function() {
 
                   $(".alert-success").show();
                   setTimeout(function() { $(".alert-success").hide();},2000);
-                wb.set("content", self.$("article").html())
-                wb.save();
-              },
+                  wb.set("content", self.$("article").html());
+                  wb.save();
+                },
               error: function(wb, error) {
                 console.log(error);
               }
             });
           }
-        },
-        error: function(error) {
         }
       });
     }
@@ -109,22 +103,19 @@ $(function() {
       "": "defaultRoute"
     },
 
-    initialize: function(options) {
-    },
-
     openHouse: function(boardId) {
       guideView.destroy();
       wbView.boardId = boardId;
       wbView.render();
     },
 
-    defaultRoute: function(actions) {
+    defaultRoute: function() {
       guideView.render();
     }
   });
 
 
-  new AppRouter;
+  new AppRouter();
   var guideView = new GuideView({el: $('.guide')});
   var wbView = new WbView({el: $('.white-board')});
 
