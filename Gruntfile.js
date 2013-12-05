@@ -33,7 +33,7 @@ module.exports = function(grunt) {
 
     uglify: {
       build: {
-        src: 'js/wb.js',
+        src: ['js/wb.js','pen/src/pen.js', 'pen/src/markdown.js'],
         dest: 'js/wb.min.js'
       }
     },
