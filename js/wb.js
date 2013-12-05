@@ -33,7 +33,7 @@ $(function() {
 
   var WbView = Parse.View.extend({
 
-    tagName:  "div",
+    tagName:  "article",
 
     template: _.template($('#white-board-template').html()),
 
@@ -56,12 +56,10 @@ $(function() {
       query.equalTo("boardId", this.boardId);
       query.find({
         success: function(results) {
-          if(results.length != 0){
+          if(results.length !== 0){
             var wb = results[0];
-            self.$("#board-content").val(wb.get("content"));  
+            self.$("article").html(wb.get("content"));
           }
-        },
-        error: function(object, error) {
         }
       });
     },
@@ -71,27 +69,28 @@ $(function() {
       query.equalTo("boardId", self.boardId);
       query.find({
         success: function(results) {
-          if(results.length == 0){
+          if(results.length === 0){
             var wb = new Wb();
-            wb.save({"boardId":self.boardId, "content": self.$("#board-content").val()},{
-              success: function(wb) {
-              },
-              error: function(wb, error) {
-              }
+            wb.save({"boardId":self.boardId, "content": self.$("article").html()},{
+              success: function() {
+                  $(".alert-success").show();
+                  setTimeout(function() { $(".alert-success").hide(); }, 2000);
+                }
             });
           } else {
             results[0].save(null, {
               success: function(wb) {
-                wb.set("content", self.$("#board-content").val())
-                wb.save();
-              },
+
+                  $(".alert-success").show();
+                  setTimeout(function() { $(".alert-success").hide();},2000);
+                  wb.set("content", self.$("article").html());
+                  wb.save();
+                },
               error: function(wb, error) {
                 console.log(error);
               }
             });
           }
-        },
-        error: function(error) {
         }
       });
     }
@@ -104,22 +103,19 @@ $(function() {
       "": "defaultRoute"
     },
 
-    initialize: function(options) {
-    },
-
     openHouse: function(boardId) {
       guideView.destroy();
       wbView.boardId = boardId;
       wbView.render();
     },
 
-    defaultRoute: function(actions) {
+    defaultRoute: function() {
       guideView.render();
     }
   });
 
 
-  new AppRouter;
+  new AppRouter();
   var guideView = new GuideView({el: $('.guide')});
   var wbView = new WbView({el: $('.white-board')});
 
