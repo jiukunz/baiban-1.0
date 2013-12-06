@@ -19,7 +19,16 @@ $(function() {
     tagName: "div",
     template: _.template($('#guide-template').html()),
 
+      events:{
+          "submit #goto-board" : "gotoBoard"
+      },
     initialize: function() {
+       
+    },
+
+    gotoBoard: function(e) {
+      e.preventDefault();
+      Parse.history.navigate($("input[name=board-name]").val(), true);
     },
 
     render: function() {
@@ -44,10 +53,10 @@ $(function() {
       "keyup #content"       : "keyup",
       "keydown #content"    : "keydown",
       "click #update" : "update"
+      
     },
 
     initialize: function() {
-      
     },
 
     render: function() {
@@ -58,6 +67,7 @@ $(function() {
     get: function() {
       var self = this;
       query.equalTo("boardId", this.boardId);
+      $('#white-board h1').text(decodeURIComponent(this.boardId));
       query.find({
         success: function(results) {
           if(results.length !== 0){
