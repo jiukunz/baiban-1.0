@@ -19,9 +19,10 @@ $(function() {
     tagName: "div",
     template: _.template($('#guide-template').html()),
 
-      events:{
-          "submit #goto-board" : "gotoBoard"
-      },
+    events: {
+      "submit #goto-board" : "gotoBoard"
+    },
+    
     initialize: function() {
        
     },
@@ -129,6 +130,9 @@ $(function() {
     }
   });
 
+  var guideView = new GuideView({el: $('.guide')});
+  var wbView = new WbView({el: $('.white-board')});
+
 
   var AppRouter = Parse.Router.extend({
     routes: {
@@ -149,8 +153,6 @@ $(function() {
 
 
   new AppRouter();
-  var guideView = new GuideView({el: $('.guide')});
-  var wbView = new WbView({el: $('.white-board')});
-
+  
   Parse.history.start();
 });
