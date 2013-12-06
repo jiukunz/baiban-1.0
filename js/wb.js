@@ -14,8 +14,7 @@ $(function() {
   // ----------
   var Wb = Parse.Object.extend("Wb");
   var query = new Parse.Query(Wb);
-  
-
+ 
   var GuideView = Parse.View.extend({
     tagName: "div",
     template: _.template($('#guide-template').html()),
@@ -34,6 +33,7 @@ $(function() {
   var typingTimer;
   var doneTypingInterval = 7000;
   var prevContnent = $('#content').html();
+
   WbView = Parse.View.extend({
 
     tagName:  "article",
@@ -62,8 +62,13 @@ $(function() {
         success: function(results) {
           if(results.length !== 0){
             var wb = results[0];
-            self.$("article").html(wb.get("content"));
+            self.$("#content").html(wb.get("content"));
           }
+          
+          new Pen({
+              editor: document.querySelector('#content'),
+              debug: true
+            }).rebuild();
         }
       });
     },
@@ -138,11 +143,4 @@ $(function() {
   var wbView = new WbView({el: $('.white-board')});
 
   Parse.history.start();
-
-  var options = {
-    editor: document.querySelector('article'),
-    debug: true
-  };
-  var pen = new Pen(options);
-  pen.rebuild();
 });
