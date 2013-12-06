@@ -31,15 +31,19 @@ $(function() {
     }
   });
 
-  var WbView = Parse.View.extend({
+  var typingTimer;
+  var doneTypingInterval = 7000;
+  var prevContnent = $('#content').html();
+  WbView = Parse.View.extend({
 
     tagName:  "article",
 
     template: _.template($('#white-board-template').html()),
 
     events: {
-      "click #get"       : "get",
-      "click #update"    : "update",
+      "keyup #content"       : "keyup",
+      "keydown #content"    : "keydown",
+      "click #update" : "update"
     },
 
     initialize: function() {
@@ -64,6 +68,19 @@ $(function() {
       });
     },
 
+    keyup: function(){
+        var self = this;
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function(){
+            if( prevContnent !== $('#content').html())
+              self.update();
+          }, doneTypingInterval);
+      },
+
+    keydown: function(){
+        clearTimeout(typingTimer);
+      },
+
     update: function() {
       var self = this;
       query.equalTo("boardId", self.boardId);
@@ -73,6 +90,7 @@ $(function() {
             var wb = new Wb();
             wb.save({"boardId":self.boardId, "content": self.$("article").html()},{
               success: function() {
+                  prevContnent = $("#content").html();
                   $(".alert-success").show();
                   setTimeout(function() { $(".alert-success").hide(); }, 2000);
                 }
@@ -80,7 +98,7 @@ $(function() {
           } else {
             results[0].save(null, {
               success: function(wb) {
-
+                  prevContnent = $("#content").html();
                   $(".alert-success").show();
                   setTimeout(function() { $(".alert-success").hide();},2000);
                   wb.set("content", self.$("article").html());
@@ -120,4 +138,11 @@ $(function() {
   var wbView = new WbView({el: $('.white-board')});
 
   Parse.history.start();
+
+  var options = {
+    editor: document.querySelector('article'),
+    debug: true
+  };
+  var pen = new Pen(options);
+  pen.rebuild();
 });
