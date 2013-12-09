@@ -14,13 +14,22 @@ $(function() {
   // ----------
   var Wb = Parse.Object.extend("Wb");
   var query = new Parse.Query(Wb);
-  
-
+ 
   var GuideView = Parse.View.extend({
     tagName: "div",
     template: _.template($('#guide-template').html()),
 
+    events: {
+      "submit #goto-board" : "gotoBoard"
+    },
+    
     initialize: function() {
+       
+    },
+
+    gotoBoard: function(e) {
+      e.preventDefault();
+      Parse.history.navigate($("input[name=board-name]").val(), true);
     },
 
     render: function() {
@@ -31,19 +40,24 @@ $(function() {
     }
   });
 
-  var WbView = Parse.View.extend({
+  var typingTimer;
+  var doneTypingInterval = 7000;
+  var prevContnent = $('#content').html();
+
+  WbView = Parse.View.extend({
 
     tagName:  "article",
 
     template: _.template($('#white-board-template').html()),
 
     events: {
-      "click #get"       : "get",
-      "click #update"    : "update",
+      "keyup #content"       : "keyup",
+      "keydown #content"    : "keydown",
+      "click #update" : "update"
+      
     },
 
     initialize: function() {
-      
     },
 
     render: function() {
@@ -54,15 +68,34 @@ $(function() {
     get: function() {
       var self = this;
       query.equalTo("boardId", this.boardId);
+      $('#white-board h1').text(decodeURIComponent(this.boardId));
       query.find({
         success: function(results) {
           if(results.length !== 0){
             var wb = results[0];
-            self.$("article").html(wb.get("content"));
+            self.$("#content").html(wb.get("content"));
           }
+          
+          new Pen({
+              editor: document.querySelector('#content'),
+              debug: true
+            }).rebuild();
         }
       });
     },
+
+    keyup: function(){
+        var self = this;
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(function(){
+            if( prevContnent !== $('#content').html())
+              self.update();
+          }, doneTypingInterval);
+      },
+
+    keydown: function(){
+        clearTimeout(typingTimer);
+      },
 
     update: function() {
       var self = this;
@@ -73,6 +106,7 @@ $(function() {
             var wb = new Wb();
             wb.save({"boardId":self.boardId, "content": self.$("article").html()},{
               success: function() {
+                  prevContnent = $("#content").html();
                   $(".alert-success").show();
                   setTimeout(function() { $(".alert-success").hide(); }, 2000);
                 }
@@ -80,7 +114,7 @@ $(function() {
           } else {
             results[0].save(null, {
               success: function(wb) {
-
+                  prevContnent = $("#content").html();
                   $(".alert-success").show();
                   setTimeout(function() { $(".alert-success").hide();},2000);
                   wb.set("content", self.$("article").html());
@@ -95,6 +129,9 @@ $(function() {
       });
     }
   });
+
+  var guideView = new GuideView({el: $('.guide')});
+  var wbView = new WbView({el: $('.white-board')});
 
 
   var AppRouter = Parse.Router.extend({
@@ -116,8 +153,6 @@ $(function() {
 
 
   new AppRouter();
-  var guideView = new GuideView({el: $('.guide')});
-  var wbView = new WbView({el: $('.white-board')});
-
+  
   Parse.history.start();
 });
