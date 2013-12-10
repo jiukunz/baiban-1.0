@@ -34,7 +34,6 @@ $(function() {
 
     render: function() {
       $(this.el).html(this.template());
-      $('input').focus();
     },
     destroy: function() {
       $(this.el).html("");
