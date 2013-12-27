@@ -41,7 +41,7 @@ $(function() {
   });
 
   var typingTimer;
-  var doneTypingInterval = 7000;
+  var doneTypingInterval = 3000;
   var prevContnent = $('#content').html();
 
   WbView = Parse.View.extend({
